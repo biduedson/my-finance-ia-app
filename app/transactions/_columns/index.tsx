@@ -2,16 +2,14 @@
 
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { TransactionTypeBadge } from "../_components/type-badge";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import TransactionTypeBadge from "../_components/type-badge";
 import { Button } from "@/app/_components/ui/button";
+import { TrashIcon } from "lucide-react";
 import {
   TRANSACTION_CATEGORY_LABELS,
   TRANSACTION_PAYMENT_METHOD_LABELS,
 } from "@/app/_constants/transactions";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import EditTransactionButton from "../_components/edit-transaction-button";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -21,7 +19,6 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "type",
     header: "Tipo",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     cell: ({ row: { original: transaction } }) => (
       <TransactionTypeBadge transaction={transaction} />
     ),
@@ -50,7 +47,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Data",
+    header: "Valor",
     cell: ({ row: { original: transaction } }) =>
       new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -60,14 +57,12 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "actions",
     header: "Ações",
-    cell: () => {
+    cell: ({ row: { original: transaction } }) => {
       return (
-        <div className="space-y-1">
-          <Button variant="ghost">
-            <PencilIcon size="icon" className="text-muted-foreground" />
-          </Button>
-          <Button variant="ghost">
-            <TrashIcon size="icon" className="text-muted-foreground" />
+        <div className="space-x-1">
+          <EditTransactionButton transaction={transaction} />
+          <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <TrashIcon />
           </Button>
         </div>
       );
